@@ -1,0 +1,21 @@
+{
+    "name": "ecommit/csv-table-generator",
+    "description": "Create a CSV file with PHP array.",
+    "keywords": ["csv", "array", "table"],
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Hubert Lecorche",
+            "email": "contact@e-commit.fr"
+        }
+    ],
+    "autoload": {
+        "psr-4": { "Ecommit\\CsvTableGenerator\\": "src/" }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    }
+}
