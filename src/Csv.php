@@ -19,7 +19,7 @@ class Csv
     protected $handle;
     protected $pathDir;
     protected $filename;
-    protected $currentFile;
+    protected $currentPathname;
     protected $header;
     protected $maxLines;
     protected $delimiter;
@@ -91,8 +91,8 @@ class Csv
         if ($this->fileNumber > 1) {
             $filename .= '-' . $this->fileNumber;
         }
-        $this->currentFile = $this->pathDir . '/' . $filename . '.csv';
-        $this->handle = \fopen($this->currentFile, 'wb'); //Binary is forced. EOL = "\n"
+        $this->currentPathname = $this->pathDir . '/' . $filename . '.csv';
+        $this->handle = \fopen($this->currentPathname, 'wb'); //Binary is forced. EOL = "\n"
         if (false === $this->handle) {
             throw new \Exception(sprintf('Error during the opening of the %s file', $this->filename));
         }
@@ -118,12 +118,12 @@ class Csv
             $this->handle = null;
 
             if ($this->unixToDos) {
-                passthru(sprintf('%s %s', $this->unixToDosPath, $this->currentFile), $returnVar);
+                passthru(sprintf('%s %s', $this->unixToDosPath, $this->currentPathname), $returnVar);
                 if (0 !== $returnVar) {
                     throw new \Exception(sprintf('Unix2dos error (%s file)', $this->filename));
                 }
             }
-            $this->currentFile = null;
+            $this->currentPathname = null;
         }
     }
 
@@ -166,5 +166,14 @@ class Csv
     public function getTotalLines()
     {
         return $this->totalLines;
+    }
+
+    /**
+     * Gets the path to the current file
+     * @return string
+     */
+    public function getCurrentPathname()
+    {
+        return $this->currentPathname;
     }
 }
