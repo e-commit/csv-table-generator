@@ -25,7 +25,8 @@ class Csv
     protected $delimiter;
     protected $enclosure;
     protected $fileNumber = 0;
-    protected $lines;
+    protected $lines = 0;
+    protected $totalLines = 0;
     protected $unixToDos = false;
     protected $unixToDosPath;
     protected $addUtf8Bom = false;
@@ -103,6 +104,7 @@ class Csv
         if (!empty($this->header)) {
             $this->write($this->header);
             $this->lines = 0;
+            $this->totalLines--;
         }
     }
 
@@ -155,5 +157,14 @@ class Csv
         }
 
         $this->lines++;
+        $this->totalLines++;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTotalLines()
+    {
+        return $this->totalLines;
     }
 }
