@@ -348,7 +348,7 @@ class CsvTest extends TestCase
 
     protected function assertCsvFile(string $filename, array $expectedRows, bool $useCrlf = false, string $beforeContent = ''): void
     {
-        $this->assertTrue(file_exists($this->path.'/'.$filename), 'File not found');
+        $this->assertFileExists($this->path.'/'.$filename, 'File not found');
         $content = file_get_contents($this->path.'/'.$filename);
 
         $endOfLine = ($useCrlf) ? "\r\n" : "\n";
