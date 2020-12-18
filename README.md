@@ -2,7 +2,7 @@
 
 Create a CSV file with PHP array.
 
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/28c792f3-d5ac-4efb-9500-c7bf7cc06b7c/big.png)](https://insight.sensiolabs.com/projects/28c792f3-d5ac-4efb-9500-c7bf7cc06b7c)
+[![Build Status](https://travis-ci.com/e-commit/csv-table-generator.svg?branch=master)](https://travis-ci.com/e-commit/csv-table-generator)
 
 ## Installation ##
 
