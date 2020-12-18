@@ -1,6 +1,8 @@
 <?php
 
-/**
+declare(strict_types=1);
+
+/*
  * This file is part of the csv-table-generator package.
  *
  * (c) E-commit <contact@e-commit.fr>
@@ -32,27 +34,28 @@ class Csv
     protected $addUtf8Bom = false;
 
     /**
-     * Constructor
+     * Constructor.
      *
-     * @param string $pathDir Path folder
+     * @param string $pathDir  Path folder
      * @param string $filename Filename (without path folder and extension)
-     * @param array $options See README.md
+     * @param array  $options  See README.md
      */
-    public function __construct($pathDir, $filename, $options = array()) {
-        $defaultOptions = array(
-            'header' => array(),
+    public function __construct($pathDir, $filename, $options = [])
+    {
+        $defaultOptions = [
+            'header' => [],
             'max_lines' => null,
             'delimiter' => ',',
             'enclosure' => '"',
             'eol' => self::EOL_LF,
             'unix2dos_path' => '/usr/bin/unix2dos',
             'add_utf8_bom' => false,
-        );
+        ];
         $options = array_merge($defaultOptions, $options);
 
         //Test folder
-        $realPath = \realpath($pathDir);
-        if (false === $realPath || !\is_writable($realPath)) {
+        $realPath = realpath($pathDir);
+        if (false === $realPath || !is_writable($realPath)) {
             throw new \Exception(sprintf('Folder %s does not exist or is not writable', $pathDir));
         }
 
@@ -62,7 +65,7 @@ class Csv
         if (empty($options['max_lines'])) {
             $this->maxLines = null;
         } else {
-            $this->maxLines = \intval($options['max_lines']);
+            $this->maxLines = (int) $options['max_lines'];
         }
         $this->delimiter = $options['delimiter'];
         $this->enclosure = $options['enclosure'];
@@ -78,43 +81,43 @@ class Csv
     }
 
     /**
-     * Open CSV file
+     * Open CSV file.
      */
     protected function open()
     {
         if ($this->handle) {
             throw new \Exception(sprintf('The file %s is already open', $this->filename));
         }
-        $this->fileNumber++;
+        ++$this->fileNumber;
         $this->lines = 0;
         $filename = $this->filename;
         if ($this->fileNumber > 1) {
-            $filename .= '-' . $this->fileNumber;
+            $filename .= '-'.$this->fileNumber;
         }
-        $this->currentPathname = $this->pathDir . '/' . $filename . '.csv';
-        $this->handle = \fopen($this->currentPathname, 'wb'); //Binary is forced. EOL = "\n"
+        $this->currentPathname = $this->pathDir.'/'.$filename.'.csv';
+        $this->handle = fopen($this->currentPathname, 'wb'); //Binary is forced. EOL = "\n"
         if (false === $this->handle) {
             throw new \Exception(sprintf('Error during the opening of the %s file', $this->filename));
         }
         if ($this->addUtf8Bom) {
-            if (!\fputs($this->handle, chr(0xEF).chr(0xBB).chr(0xBF))) {
+            if (!fwrite($this->handle, \chr(0xEF).\chr(0xBB).\chr(0xBF))) {
                 throw new \Exception(sprintf('Error during the UTF8-BOM writing in %s file', $this->filename));
             }
         }
         if (!empty($this->header)) {
             $this->write($this->header);
             $this->lines = 0;
-            $this->totalLines--;
+            --$this->totalLines;
         }
     }
 
     /**
-     * Close CSV file
+     * Close CSV file.
      */
     public function close()
     {
         if ($this->handle) {
-            \fclose($this->handle);
+            fclose($this->handle);
             $this->handle = null;
 
             if ($this->unixToDos) {
@@ -128,7 +131,7 @@ class Csv
     }
 
     /**
-     * Create new CSV file
+     * Create new CSV file.
      */
     protected function newFile()
     {
@@ -137,7 +140,8 @@ class Csv
     }
 
     /**
-     * Add line in CSV file
+     * Add line in CSV file.
+     *
      * @param array $data
      */
     public function write($data)
@@ -152,12 +156,12 @@ class Csv
         }
 
         //Write
-        if (false === \fputcsv($this->handle, $data, $this->delimiter, $this->enclosure)) {
+        if (false === fputcsv($this->handle, $data, $this->delimiter, $this->enclosure)) {
             throw new \Exception(sprintf('Error during the writing in %s file', $this->filename));
         }
 
-        $this->lines++;
-        $this->totalLines++;
+        ++$this->lines;
+        ++$this->totalLines;
     }
 
     /**
@@ -169,7 +173,8 @@ class Csv
     }
 
     /**
-     * Gets the path to the current file
+     * Gets the path to the current file.
+     *
      * @return string
      */
     public function getCurrentPathname()
