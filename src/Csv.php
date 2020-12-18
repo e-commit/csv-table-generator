@@ -121,7 +121,12 @@ class Csv
             $this->handle = null;
 
             if ($this->unixToDos) {
-                passthru(sprintf('%s %s', $this->unixToDosPath, $this->currentPathname), $returnVar);
+                if (PHP_OS_FAMILY === 'Linux') {
+                    $command = sprintf('%s %s 2> /dev/null', $this->unixToDosPath, $this->currentPathname);
+                } else {
+                    $command = sprintf('%s %s', $this->unixToDosPath, $this->currentPathname);
+                }
+                exec($command, $output, $returnVar);
                 if (0 !== $returnVar) {
                     throw new \Exception(sprintf('Unix2dos error (%s file)', $this->filename));
                 }
