@@ -1,12 +1,10 @@
-CSV Table Generator
-====================
+# CSV Table Generator
 
 Create a CSV file with PHP array.
 
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/28c792f3-d5ac-4efb-9500-c7bf7cc06b7c/big.png)](https://insight.sensiolabs.com/projects/28c792f3-d5ac-4efb-9500-c7bf7cc06b7c)
 
-Installation
--------------
+## Installation ##
 
 To install csv-table-generator with Composer just run :
 
@@ -16,8 +14,7 @@ $ composer require ecommit/csv-table-generator
 
 
 
-Usage
-------
+## Usage ##
 
 ```php
 use Ecommit\CsvTableGenerator\Csv;
@@ -59,6 +56,6 @@ Test1,Test2
 * **unix2dos_path** (string) : Unix2dos path. Only used if eol=Csv::EOL_CRLF. **Default: /usr/bin/unix2dos**
 * **add_utf8_bom** (bool) : Add or not UTF8 bom. **Default: false**
 
-##License
+## License ##
 
 This librairy is under the MIT license. See the complete license in *LICENSE* file.
