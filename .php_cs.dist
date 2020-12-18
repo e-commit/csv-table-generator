@@ -21,6 +21,8 @@ return PhpCsFixer\Config::create()
         '@DoctrineAnnotation' => true,
         '@PHP56Migration' =>  true,
         '@PHP56Migration:risky' => true,
+        '@PHP71Migration' => true,
+        '@PHP71Migration:risky' => true,
         'array_syntax' => ['syntax' => 'short'],
         'fopen_flags' => true,
         'header_comment' => ['header' => $fileHeaderComment, 'separate' => 'both'],

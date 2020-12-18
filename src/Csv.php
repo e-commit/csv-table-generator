@@ -15,8 +15,8 @@ namespace Ecommit\CsvTableGenerator;
 
 class Csv
 {
-    const EOL_LF = 'LF';
-    const EOL_CRLF = 'CR+LF';
+    public const EOL_LF = 'LF';
+    public const EOL_CRLF = 'CR+LF';
 
     protected $handle;
     protected $pathDir;
@@ -83,7 +83,7 @@ class Csv
     /**
      * Open CSV file.
      */
-    protected function open()
+    protected function open(): void
     {
         if ($this->handle) {
             throw new \Exception(sprintf('The file %s is already open', $this->filename));
@@ -114,7 +114,7 @@ class Csv
     /**
      * Close CSV file.
      */
-    public function close()
+    public function close(): void
     {
         if ($this->handle) {
             fclose($this->handle);
@@ -133,7 +133,7 @@ class Csv
     /**
      * Create new CSV file.
      */
-    protected function newFile()
+    protected function newFile(): void
     {
         $this->close();
         $this->open();
@@ -144,7 +144,7 @@ class Csv
      *
      * @param array $data
      */
-    public function write($data)
+    public function write($data): void
     {
         if (!$this->handle) {
             throw new \Exception(sprintf('Handle does not exist. File %s', $this->filename));
@@ -164,10 +164,7 @@ class Csv
         ++$this->totalLines;
     }
 
-    /**
-     * @return int
-     */
-    public function getTotalLines()
+    public function getTotalLines(): int
     {
         return $this->totalLines;
     }
@@ -177,7 +174,7 @@ class Csv
      *
      * @return string
      */
-    public function getCurrentPathname()
+    public function getCurrentPathname(): ?string
     {
         return $this->currentPathname;
     }
