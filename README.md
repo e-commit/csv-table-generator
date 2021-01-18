@@ -2,7 +2,7 @@
 
 Create a CSV file with PHP array.
 
-[![Build Status](https://travis-ci.com/e-commit/csv-table-generator.svg?branch=master)](https://travis-ci.com/e-commit/csv-table-generator)
+![Tests](https://github.com/e-commit/csv-table-generator/workflows/Tests/badge.svg)
 
 ## Installation ##
 
