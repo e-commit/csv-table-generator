@@ -121,7 +121,7 @@ class Csv
             $this->handle = null;
 
             if ($this->unixToDos) {
-                if (PHP_OS_FAMILY === 'Linux') {
+                if (\PHP_OS_FAMILY === 'Linux') {
                     $command = sprintf('%s %s 2> /dev/null', $this->unixToDosPath, $this->currentPathname);
                 } else {
                     $command = sprintf('%s %s', $this->unixToDosPath, $this->currentPathname);
