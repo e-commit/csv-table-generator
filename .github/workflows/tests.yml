@@ -15,10 +15,14 @@ jobs:
                 include:
                     -   php-version: '7.2'
                         composer-flags: '--prefer-stable --prefer-lowest'
+                        install-dos2unix: true
                         description: 'with lowest'
                     -   php-version: '7.2'
+                        install-dos2unix: true
                     -   php-version: '7.4'
+                        install-dos2unix: true
                     -   php-version: '8.0'
+                        install-dos2unix: true
                     -   php-version: '8.1'
                     -   php-version: '8.0'
                         description: 'with Coding Standards'
@@ -32,7 +36,8 @@ jobs:
             -   name: Checkout
                 uses: actions/checkout@v2
 
-            -   name: Install system dependencies
+            -   name: Install dos2unix
+                if: matrix.install-dos2unix
                 run: |
                     sudo apt-get install -y dos2unix
 

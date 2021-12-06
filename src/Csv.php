@@ -26,6 +26,7 @@ class Csv
     protected $maxLines;
     protected $delimiter;
     protected $enclosure;
+    protected $eol;
     protected $fileNumber = 0;
     protected $lines = 0;
     protected $totalLines = 0;
@@ -69,8 +70,9 @@ class Csv
         }
         $this->delimiter = $options['delimiter'];
         $this->enclosure = $options['enclosure'];
+        $this->eol = $options['eol'];
 
-        if (self::EOL_CRLF === $options['eol']) {
+        if (self::EOL_CRLF === $options['eol'] && \PHP_VERSION_ID < 80100) { //PHP < 8.1
             $this->unixToDos = true;
         }
         $this->unixToDosPath = $options['unix2dos_path'];
@@ -120,7 +122,7 @@ class Csv
             fclose($this->handle);
             $this->handle = null;
 
-            if ($this->unixToDos) {
+            if ($this->unixToDos) { //PHP < 8.1
                 if (\PHP_OS_FAMILY === 'Linux') {
                     $command = sprintf('%s %s 2> /dev/null', $this->unixToDosPath, $this->currentPathname);
                 } else {
@@ -161,7 +163,13 @@ class Csv
         }
 
         //Write
-        if (false === fputcsv($this->handle, $data, $this->delimiter, $this->enclosure)) {
+        if (\PHP_VERSION_ID >= 80100) { //PHP >= 8.1
+            $eol = (self::EOL_CRLF === $this->eol) ? "\r\n" : "\n";
+            $result = fputcsv($this->handle, $data, $this->delimiter, $this->enclosure, '\\', $eol);
+        } else { //PHP < 8.1
+            $result = fputcsv($this->handle, $data, $this->delimiter, $this->enclosure, '\\');
+        }
+        if (false === $result) {
             throw new \Exception(sprintf('Error during the writing in %s file', $this->filename));
         }
 

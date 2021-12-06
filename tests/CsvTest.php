@@ -28,9 +28,11 @@ class CsvTest extends TestCase
         $this->deleteDir();
         mkdir($this->path);
 
-        $this->unix2dosLocation = exec('which unix2dos');
-        if (empty($this->unix2dosLocation)) {
-            throw new \Exception('unix2dos not found');
+        if (\PHP_VERSION_ID < 80100) { //PHP < 8.1
+            $this->unix2dosLocation = exec('which unix2dos');
+            if (empty($this->unix2dosLocation)) {
+                throw new \Exception('unix2dos not found');
+            }
         }
     }
 
@@ -193,8 +195,10 @@ class CsvTest extends TestCase
 
     public function testWithBadUnix2DosPath(): void
     {
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('Unix2dos error (my-csv file)');
+        if (\PHP_VERSION_ID < 80100) { //PHP < 8.1
+            $this->expectException(\Exception::class);
+            $this->expectExceptionMessage('Unix2dos error (my-csv file)');
+        }
 
         $csv = $this->createCsv([
             'eol' => CSV::EOL_CRLF,
@@ -203,6 +207,12 @@ class CsvTest extends TestCase
         $csv->write(['a a', 'bb']);
         $csv->write(['cc', 'dd']);
         $csv->close();
+
+        //PHP >= 8.1
+        $this->assertCsvFile('my-csv.csv', [
+            '"a a",bb',
+            'cc,dd',
+        ], true);
     }
 
     public function testWithAddUtf8BomOption(): void

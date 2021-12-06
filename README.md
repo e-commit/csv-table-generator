@@ -52,8 +52,8 @@ Test1,Test2
 * **delimiter** (string) : CSV delimiter. **Default: ,**
 * **enclosure** (string) : CSV enclosure. **Default: "**
 * **eol** (string - Csv::EOL_ constants) : EOF(End Of Line) character. See **Csv::EOL_** constants. **Default: Csv::EOL_LF**. If **Csv::EOL_CRLF**
-  is used, **unix2dos** program is required
-* **unix2dos_path** (string) : Unix2dos path. Only used if eol=Csv::EOL_CRLF. **Default: /usr/bin/unix2dos**
+  is used with PHP ≤ 8.1, **unix2dos** program is required
+* **unix2dos_path** (string) : Unix2dos path. Only used if eol=Csv::EOL_CRLF with PHP ≤ 8.1. **Default: /usr/bin/unix2dos**
 * **add_utf8_bom** (bool) : Add or not UTF8 bom. **Default: false**
 
 ## License ##
