@@ -59,11 +59,13 @@ class CsvTest extends TestCase
         $csv = $this->createCsv();
         $csv->write(['a a', 'bb']);
         $csv->write(['cc', 'dd']);
+        $csv->write(['c"c', 'd\"d']);
         $csv->close();
 
         $this->assertCsvFile('my-csv.csv', [
             '"a a",bb',
             'cc,dd',
+            '"c""c","d\"d"',
         ]);
     }
 
@@ -213,6 +215,40 @@ class CsvTest extends TestCase
             '"a a",bb',
             'cc,dd',
         ], true);
+    }
+
+    public function testWithEscapeOption(): void
+    {
+        $csv = $this->createCsv([
+            'escape' => '@',
+        ]);
+        $csv->write(['a a', 'bb']);
+        $csv->write(['cc', 'dd']);
+        $csv->write(['c"c', 'd@"d']);
+        $csv->close();
+
+        $this->assertCsvFile('my-csv.csv', [
+            '"a a",bb',
+            'cc,dd',
+            '"c""c","d@"d"',
+        ]);
+    }
+
+    public function testWithEmptyEscapeOption(): void
+    {
+        $csv = $this->createCsv([
+            'escape' => '',
+        ]);
+        $csv->write(['a a', 'bb']);
+        $csv->write(['cc', 'dd']);
+        $csv->write(['c"c', 'd\"d']);
+        $csv->close();
+
+        $this->assertCsvFile('my-csv.csv', [
+            '"a a",bb',
+            'cc,dd',
+            '"c""c","d\""d"',
+        ]);
     }
 
     public function testWithAddUtf8BomOption(): void

@@ -27,6 +27,7 @@ class Csv
     protected $delimiter;
     protected $enclosure;
     protected $eol;
+    protected $escape;
     protected $fileNumber = 0;
     protected $lines = 0;
     protected $totalLines = 0;
@@ -49,6 +50,7 @@ class Csv
             'delimiter' => ',',
             'enclosure' => '"',
             'eol' => self::EOL_LF,
+            'escape' => '\\',
             'unix2dos_path' => '/usr/bin/unix2dos',
             'add_utf8_bom' => false,
         ];
@@ -71,6 +73,7 @@ class Csv
         $this->delimiter = $options['delimiter'];
         $this->enclosure = $options['enclosure'];
         $this->eol = $options['eol'];
+        $this->escape = $options['escape'];
 
         if (self::EOL_CRLF === $options['eol'] && \PHP_VERSION_ID < 80100) { //PHP < 8.1
             $this->unixToDos = true;
@@ -165,9 +168,9 @@ class Csv
         //Write
         if (\PHP_VERSION_ID >= 80100) { //PHP >= 8.1
             $eol = (self::EOL_CRLF === $this->eol) ? "\r\n" : "\n";
-            $result = fputcsv($this->handle, $data, $this->delimiter, $this->enclosure, '\\', $eol);
+            $result = fputcsv($this->handle, $data, $this->delimiter, $this->enclosure, $this->escape, $eol);
         } else { //PHP < 8.1
-            $result = fputcsv($this->handle, $data, $this->delimiter, $this->enclosure, '\\');
+            $result = fputcsv($this->handle, $data, $this->delimiter, $this->enclosure, $this->escape);
         }
         if (false === $result) {
             throw new \Exception(sprintf('Error during the writing in %s file', $this->filename));

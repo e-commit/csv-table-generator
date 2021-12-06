@@ -13,12 +13,10 @@ jobs:
             fail-fast: false
             matrix:
                 include:
-                    -   php-version: '7.2'
+                    -   php-version: '7.4'
                         composer-flags: '--prefer-stable --prefer-lowest'
                         install-dos2unix: true
                         description: 'with lowest'
-                    -   php-version: '7.2'
-                        install-dos2unix: true
                     -   php-version: '7.4'
                         install-dos2unix: true
                     -   php-version: '8.0'
