@@ -69,6 +69,4 @@ jobs:
 
             -   name: Run PHP CS Fixer
                 if: matrix.coding-standards
-                env:
-                    PHP_CS_FIXER_IGNORE_ENV: 1
                 run: php vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix --diff --dry-run -v
