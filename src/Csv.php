@@ -56,7 +56,7 @@ class Csv
         ];
         $options = array_merge($defaultOptions, $options);
 
-        //Test folder
+        // Test folder
         $realPath = realpath($pathDir);
         if (false === $realPath || !is_writable($realPath)) {
             throw new \Exception(sprintf('Folder %s does not exist or is not writable', $pathDir));
@@ -75,7 +75,7 @@ class Csv
         $this->eol = $options['eol'];
         $this->escape = $options['escape'];
 
-        if (self::EOL_CRLF === $options['eol'] && \PHP_VERSION_ID < 80100) { //PHP < 8.1
+        if (self::EOL_CRLF === $options['eol'] && \PHP_VERSION_ID < 80100) { // PHP < 8.1
             $this->unixToDos = true;
         }
         $this->unixToDosPath = $options['unix2dos_path'];
@@ -100,7 +100,7 @@ class Csv
             $filename .= '-'.$this->fileNumber;
         }
         $this->currentPathname = $this->pathDir.'/'.$filename.'.csv';
-        $this->handle = fopen($this->currentPathname, 'wb'); //Binary is forced. EOL = "\n"
+        $this->handle = fopen($this->currentPathname, 'wb'); // Binary is forced. EOL = "\n"
         if (false === $this->handle) {
             throw new \Exception(sprintf('Error during the opening of the %s file', $this->filename));
         }
@@ -125,7 +125,7 @@ class Csv
             fclose($this->handle);
             $this->handle = null;
 
-            if ($this->unixToDos) { //PHP < 8.1
+            if ($this->unixToDos) { // PHP < 8.1
                 if (\PHP_OS_FAMILY === 'Linux') {
                     $command = sprintf('%s %s 2> /dev/null', $this->unixToDosPath, $this->currentPathname);
                 } else {
@@ -160,16 +160,16 @@ class Csv
             throw new \Exception(sprintf('Handle does not exist. File %s', $this->filename));
         }
 
-        //New file
+        // New file
         if ($this->maxLines && $this->maxLines == $this->lines) {
             $this->newFile();
         }
 
-        //Write
-        if (\PHP_VERSION_ID >= 80100) { //PHP >= 8.1
+        // Write
+        if (\PHP_VERSION_ID >= 80100) { // PHP >= 8.1
             $eol = (self::EOL_CRLF === $this->eol) ? "\r\n" : "\n";
             $result = fputcsv($this->handle, $data, $this->delimiter, $this->enclosure, $this->escape, $eol);
-        } else { //PHP < 8.1
+        } else { // PHP < 8.1
             $result = fputcsv($this->handle, $data, $this->delimiter, $this->enclosure, $this->escape);
         }
         if (false === $result) {

@@ -28,7 +28,7 @@ class CsvTest extends TestCase
         $this->deleteDir();
         mkdir($this->path);
 
-        if (\PHP_VERSION_ID < 80100) { //PHP < 8.1
+        if (\PHP_VERSION_ID < 80100) { // PHP < 8.1
             $this->unix2dosLocation = exec('which unix2dos');
             if (empty($this->unix2dosLocation)) {
                 throw new \Exception('unix2dos not found');
@@ -197,7 +197,7 @@ class CsvTest extends TestCase
 
     public function testWithBadUnix2DosPath(): void
     {
-        if (\PHP_VERSION_ID < 80100) { //PHP < 8.1
+        if (\PHP_VERSION_ID < 80100) { // PHP < 8.1
             $this->expectException(\Exception::class);
             $this->expectExceptionMessage('Unix2dos error (my-csv file)');
         }
@@ -210,7 +210,7 @@ class CsvTest extends TestCase
         $csv->write(['cc', 'dd']);
         $csv->close();
 
-        //PHP >= 8.1
+        // PHP >= 8.1
         $this->assertCsvFile('my-csv.csv', [
             '"a a",bb',
             'cc,dd',
