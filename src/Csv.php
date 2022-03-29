@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Ecommit\CsvTableGenerator;
 
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
 class Csv
 {
     public const EOL_LF = 'LF';
@@ -44,8 +46,9 @@ class Csv
      */
     public function __construct($pathDir, $filename, $options = [])
     {
-        $defaultOptions = [
-            'header' => [],
+        $resolver = new OptionsResolver();
+        $resolver->setDefaults([
+            'header' => null,
             'max_lines' => null,
             'delimiter' => ',',
             'enclosure' => '"',
@@ -53,8 +56,17 @@ class Csv
             'escape' => '\\',
             'unix2dos_path' => '/usr/bin/unix2dos',
             'add_utf8_bom' => false,
-        ];
-        $options = array_merge($defaultOptions, $options);
+        ]);
+        $resolver->setAllowedTypes('header', ['null', 'array']);
+        $resolver->setAllowedTypes('max_lines', ['null', 'int']);
+        $resolver->setAllowedTypes('delimiter', 'string');
+        $resolver->setAllowedTypes('enclosure', 'string');
+        $resolver->setAllowedValues('eol', [self::EOL_LF, self::EOL_CRLF]);
+        $resolver->setAllowedTypes('escape', 'string');
+        $resolver->setAllowedTypes('unix2dos_path', 'string');
+        $resolver->setAllowedTypes('add_utf8_bom', 'bool');
+        $this->configureOptions($resolver);
+        $options = $resolver->resolve($options);
 
         // Test folder
         $realPath = realpath($pathDir);
@@ -193,5 +205,9 @@ class Csv
     public function getCurrentPathname(): ?string
     {
         return $this->currentPathname;
+    }
+
+    protected function configureOptions(OptionsResolver $resolver): void
+    {
     }
 }

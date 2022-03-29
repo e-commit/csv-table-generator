@@ -20,7 +20,7 @@ class CsvTest extends TestCase
 {
     protected $path;
 
-    protected $unix2dosLocation;
+    protected $unix2dosLocation = 'not-found';
 
     protected function setUp(): void
     {
