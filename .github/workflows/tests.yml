@@ -13,25 +13,33 @@ jobs:
             fail-fast: false
             matrix:
                 include:
-                    #Mini
+                    #Mini (for each Symfony version)
                     -   php-version: '7.4'
+                        symfony-version: '4.4.*'
                         composer-flags: '--prefer-stable --prefer-lowest'
                         install-dos2unix: true
-                        description: 'with lowest'
+                        description: 'with SF 4.4.* lowest'
+                    -   php-version: '7.4'
+                        symfony-version: '5.4.*'
+                        composer-flags: '--prefer-stable --prefer-lowest'
+                        install-dos2unix: true
+                        description: 'with SF 5.4.* lowest'
+                    -   php-version: '8.0'
+                        symfony-version: '6.0.*'
+                        composer-flags: '--prefer-stable --prefer-lowest'
+                        install-dos2unix: true
+                        description: 'with SF 6.0.* lowest'
 
                     #Symfony versions
                     -   php-version: '8.1'
-                        symfony-version: '^4.4'
-                        description: 'with SF ^4.4'
+                        symfony-version: '4.4.*'
+                        description: 'with SF 4.4.*'
                     -   php-version: '8.1'
-                        symfony-version: '^5.4'
-                        description: 'with SF ^5.4'
+                        symfony-version: '5.4.*'
+                        description: 'with SF 5.4.*'
                     -   php-version: '8.1'
-                        symfony-version: '~6.0'
-                        description: 'with SF ~6.0'
-                    -   php-version: '8.1'
-                        symfony-version: '^6.0'
-                        description: 'with SF ^6.0'
+                        symfony-version: '6.0.*'
+                        description: 'with SF 6.0.*'
 
                     #PHP versions
                     -   php-version: '7.4'
