@@ -20,21 +20,85 @@ class Csv
     public const EOL_LF = 'LF';
     public const EOL_CRLF = 'CR+LF';
 
+    /**
+     * @var resource|false|null
+     * @psalm-var resource|closed-resource|false|null
+     */
     protected $handle;
+
+    /**
+     * @var string
+     */
     protected $pathDir;
+
+    /**
+     * @var string
+     */
     protected $filename;
+
+    /**
+     * @var string
+     */
     protected $currentPathname;
+
+    /**
+     * @var array|null
+     */
     protected $header;
+
+    /**
+     * @var int|null
+     */
     protected $maxLines;
+
+    /**
+     * @var string
+     */
     protected $delimiter;
+
+    /**
+     * @var string
+     */
     protected $enclosure;
+
+    /**
+     * @var string
+     */
     protected $eol;
+
+    /**
+     * @var string
+     */
     protected $escape;
+
+    /**
+     * @var int
+     */
     protected $fileNumber = 0;
+
+    /**
+     * @var int
+     */
     protected $lines = 0;
+
+    /**
+     * @var int
+     */
     protected $totalLines = 0;
+
+    /**
+     * @var bool
+     */
     protected $unixToDos = false;
+
+    /**
+     * @var string
+     */
     protected $unixToDosPath;
+
+    /**
+     * @var bool
+     */
     protected $addUtf8Bom = false;
 
     /**
@@ -44,7 +108,7 @@ class Csv
      * @param string $filename Filename (without path folder and extension)
      * @param array  $options  See README.md
      */
-    public function __construct($pathDir, $filename, $options = [])
+    public function __construct(string $pathDir, string $filename, array $options = [])
     {
         $resolver = new OptionsResolver();
         $resolver->setDefaults([
@@ -102,7 +166,7 @@ class Csv
      */
     protected function open(): void
     {
-        if ($this->handle) {
+        if (\is_resource($this->handle)) {
             throw new \Exception(sprintf('The file %s is already open', $this->filename));
         }
         ++$this->fileNumber;
@@ -133,7 +197,7 @@ class Csv
      */
     public function close(): void
     {
-        if ($this->handle) {
+        if (\is_resource($this->handle)) {
             fclose($this->handle);
             $this->handle = null;
 
@@ -148,7 +212,6 @@ class Csv
                     throw new \Exception(sprintf('Unix2dos error (%s file)', $this->filename));
                 }
             }
-            $this->currentPathname = null;
         }
     }
 
@@ -168,7 +231,7 @@ class Csv
      */
     public function write($data): void
     {
-        if (!$this->handle) {
+        if (!\is_resource($this->handle)) {
             throw new \Exception(sprintf('Handle does not exist. File %s', $this->filename));
         }
 
@@ -180,6 +243,7 @@ class Csv
         // Write
         if (\PHP_VERSION_ID >= 80100) { // PHP >= 8.1
             $eol = (self::EOL_CRLF === $this->eol) ? "\r\n" : "\n";
+            /** @psalm-suppress TooManyArguments */
             $result = fputcsv($this->handle, $data, $this->delimiter, $this->enclosure, $this->escape, $eol);
         } else { // PHP < 8.1
             $result = fputcsv($this->handle, $data, $this->delimiter, $this->enclosure, $this->escape);
