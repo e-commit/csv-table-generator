@@ -22,6 +22,7 @@ class Csv
 
     /**
      * @var resource|false|null
+     *
      * @psalm-var resource|closed-resource|false|null
      */
     protected $handle;
