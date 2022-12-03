@@ -34,6 +34,11 @@ jobs:
                         composer-flags: '--prefer-stable --prefer-lowest'
                         install-dos2unix: true
                         description: 'with SF 6.1.* lowest'
+                    -   php-version: '8.1'
+                        symfony-version: '6.2.*'
+                        composer-flags: '--prefer-stable --prefer-lowest'
+                        install-dos2unix: true
+                        description: 'with SF 6.2.* lowest'
 
                     #Symfony versions
                     -   php-version: '8.1'
@@ -48,6 +53,9 @@ jobs:
                     -   php-version: '8.1'
                         symfony-version: '6.1.*'
                         description: 'with SF 6.1.*'
+                    -   php-version: '8.1'
+                        symfony-version: '6.2.*'
+                        description: 'with SF 6.2.*'
 
                     #PHP versions
                     -   php-version: '7.4'
