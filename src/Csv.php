@@ -264,8 +264,6 @@ class Csv
 
     /**
      * Gets the path to the current file.
-     *
-     * @return string
      */
     public function getCurrentPathname(): ?string
     {
