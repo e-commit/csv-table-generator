@@ -182,7 +182,7 @@ class CsvTest extends TestCase
     public function testWithEolOption(): void
     {
         $csv = $this->createCsv([
-            'eol' => CSV::EOL_CRLF,
+            'eol' => Csv::EOL_CRLF,
             'unix2dos_path' => $this->unix2dosLocation,
         ]);
         $csv->write(['a a', 'bb']);
@@ -203,7 +203,7 @@ class CsvTest extends TestCase
         }
 
         $csv = $this->createCsv([
-            'eol' => CSV::EOL_CRLF,
+            'eol' => Csv::EOL_CRLF,
             'unix2dos_path' => 'unix2dosFake',
         ]);
         $csv->write(['a a', 'bb']);
