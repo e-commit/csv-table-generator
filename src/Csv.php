@@ -182,11 +182,11 @@ class Csv
             throw new \Exception(sprintf('Error during the opening of the %s file', $this->filename));
         }
         if ($this->addUtf8Bom) {
-            if (!fwrite($this->handle, \chr(0xEF).\chr(0xBB).\chr(0xBF))) {
+            if (false === fwrite($this->handle, \chr(0xEF).\chr(0xBB).\chr(0xBF))) {
                 throw new \Exception(sprintf('Error during the UTF8-BOM writing in %s file', $this->filename));
             }
         }
-        if (!empty($this->header)) {
+        if (null !== $this->header && \count($this->header) > 0) {
             $this->write($this->header);
             $this->lines = 0;
             --$this->totalLines;
@@ -237,7 +237,7 @@ class Csv
         }
 
         // New file
-        if ($this->maxLines && $this->maxLines == $this->lines) {
+        if (null !== $this->maxLines && $this->maxLines == $this->lines) {
             $this->newFile();
         }
 
