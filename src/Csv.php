@@ -136,7 +136,7 @@ class Csv
         // Test folder
         $realPath = realpath($pathDir);
         if (false === $realPath || !is_writable($realPath)) {
-            throw new \Exception(sprintf('Folder %s does not exist or is not writable', $pathDir));
+            throw new \Exception(\sprintf('Folder %s does not exist or is not writable', $pathDir));
         }
 
         $this->pathDir = $realPath;
@@ -168,7 +168,7 @@ class Csv
     protected function open(): void
     {
         if (\is_resource($this->handle)) {
-            throw new \Exception(sprintf('The file %s is already open', $this->filename));
+            throw new \Exception(\sprintf('The file %s is already open', $this->filename));
         }
         ++$this->fileNumber;
         $this->lines = 0;
@@ -179,11 +179,11 @@ class Csv
         $this->currentPathname = $this->pathDir.'/'.$filename.'.csv';
         $this->handle = fopen($this->currentPathname, 'wb'); // Binary is forced. EOL = "\n"
         if (false === $this->handle) {
-            throw new \Exception(sprintf('Error during the opening of the %s file', $this->filename));
+            throw new \Exception(\sprintf('Error during the opening of the %s file', $this->filename));
         }
         if ($this->addUtf8Bom) {
             if (false === fwrite($this->handle, \chr(0xEF).\chr(0xBB).\chr(0xBF))) {
-                throw new \Exception(sprintf('Error during the UTF8-BOM writing in %s file', $this->filename));
+                throw new \Exception(\sprintf('Error during the UTF8-BOM writing in %s file', $this->filename));
             }
         }
         if (null !== $this->header && \count($this->header) > 0) {
@@ -204,13 +204,13 @@ class Csv
 
             if ($this->unixToDos) { // PHP < 8.1
                 if (\PHP_OS_FAMILY === 'Linux') {
-                    $command = sprintf('%s %s 2> /dev/null', $this->unixToDosPath, $this->currentPathname);
+                    $command = \sprintf('%s %s 2> /dev/null', $this->unixToDosPath, $this->currentPathname);
                 } else {
-                    $command = sprintf('%s %s', $this->unixToDosPath, $this->currentPathname);
+                    $command = \sprintf('%s %s', $this->unixToDosPath, $this->currentPathname);
                 }
                 exec($command, $output, $returnVar);
                 if (0 !== $returnVar) {
-                    throw new \Exception(sprintf('Unix2dos error (%s file)', $this->filename));
+                    throw new \Exception(\sprintf('Unix2dos error (%s file)', $this->filename));
                 }
             }
         }
@@ -233,7 +233,7 @@ class Csv
     public function write($data): void
     {
         if (!\is_resource($this->handle)) {
-            throw new \Exception(sprintf('Handle does not exist. File %s', $this->filename));
+            throw new \Exception(\sprintf('Handle does not exist. File %s', $this->filename));
         }
 
         // New file
@@ -250,7 +250,7 @@ class Csv
             $result = fputcsv($this->handle, $data, $this->delimiter, $this->enclosure, $this->escape);
         }
         if (false === $result) {
-            throw new \Exception(sprintf('Error during the writing in %s file', $this->filename));
+            throw new \Exception(\sprintf('Error during the writing in %s file', $this->filename));
         }
 
         ++$this->lines;
