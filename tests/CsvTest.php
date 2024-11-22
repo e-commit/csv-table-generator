@@ -20,20 +20,11 @@ class CsvTest extends TestCase
 {
     protected $path;
 
-    protected $unix2dosLocation = 'not-found';
-
     protected function setUp(): void
     {
         $this->path = sys_get_temp_dir().'/test-csv';
         $this->deleteDir();
         mkdir($this->path);
-
-        if (\PHP_VERSION_ID < 80100) { // PHP < 8.1
-            $this->unix2dosLocation = exec('which unix2dos');
-            if (empty($this->unix2dosLocation)) {
-                throw new \Exception('unix2dos not found');
-            }
-        }
     }
 
     protected function tearDown(): void
@@ -183,34 +174,11 @@ class CsvTest extends TestCase
     {
         $csv = $this->createCsv([
             'eol' => Csv::EOL_CRLF,
-            'unix2dos_path' => $this->unix2dosLocation,
         ]);
         $csv->write(['a a', 'bb']);
         $csv->write(['cc', 'dd']);
         $csv->close();
 
-        $this->assertCsvFile('my-csv.csv', [
-            '"a a",bb',
-            'cc,dd',
-        ], true);
-    }
-
-    public function testWithBadUnix2DosPath(): void
-    {
-        if (\PHP_VERSION_ID < 80100) { // PHP < 8.1
-            $this->expectException(\Exception::class);
-            $this->expectExceptionMessage('Unix2dos error (my-csv file)');
-        }
-
-        $csv = $this->createCsv([
-            'eol' => Csv::EOL_CRLF,
-            'unix2dos_path' => 'unix2dosFake',
-        ]);
-        $csv->write(['a a', 'bb']);
-        $csv->write(['cc', 'dd']);
-        $csv->close();
-
-        // PHP >= 8.1
         $this->assertCsvFile('my-csv.csv', [
             '"a a",bb',
             'cc,dd',

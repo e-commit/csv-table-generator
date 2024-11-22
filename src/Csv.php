@@ -89,11 +89,15 @@ class Csv
 
     /**
      * @var bool
+     *
+     * @deprecated No longer used
      */
     protected $unixToDos = false;
 
     /**
      * @var string
+     *
+     * @deprecated No longer used
      */
     protected $unixToDosPath;
 
@@ -130,6 +134,7 @@ class Csv
         $resolver->setAllowedTypes('escape', 'string');
         $resolver->setAllowedTypes('unix2dos_path', 'string');
         $resolver->setAllowedTypes('add_utf8_bom', 'bool');
+        $resolver->setDeprecated('unix2dos_path', 'ecommit/csv-table-generator', '1.3');
         $this->configureOptions($resolver);
         $options = $resolver->resolve($options);
 
@@ -152,9 +157,7 @@ class Csv
         $this->eol = $options['eol'];
         $this->escape = $options['escape'];
 
-        if (self::EOL_CRLF === $options['eol'] && \PHP_VERSION_ID < 80100) { // PHP < 8.1
-            $this->unixToDos = true;
-        }
+        /* @psalm-suppress DeprecatedProperty */
         $this->unixToDosPath = $options['unix2dos_path'];
 
         $this->addUtf8Bom = $options['add_utf8_bom'];
@@ -201,18 +204,6 @@ class Csv
         if (\is_resource($this->handle)) {
             fclose($this->handle);
             $this->handle = null;
-
-            if ($this->unixToDos) { // PHP < 8.1
-                if (\PHP_OS_FAMILY === 'Linux') {
-                    $command = \sprintf('%s %s 2> /dev/null', $this->unixToDosPath, $this->currentPathname);
-                } else {
-                    $command = \sprintf('%s %s', $this->unixToDosPath, $this->currentPathname);
-                }
-                exec($command, $output, $returnVar);
-                if (0 !== $returnVar) {
-                    throw new \Exception(\sprintf('Unix2dos error (%s file)', $this->filename));
-                }
-            }
         }
     }
 
@@ -242,13 +233,9 @@ class Csv
         }
 
         // Write
-        if (\PHP_VERSION_ID >= 80100) { // PHP >= 8.1
-            $eol = (self::EOL_CRLF === $this->eol) ? "\r\n" : "\n";
-            /** @psalm-suppress TooManyArguments */
-            $result = fputcsv($this->handle, $data, $this->delimiter, $this->enclosure, $this->escape, $eol);
-        } else { // PHP < 8.1
-            $result = fputcsv($this->handle, $data, $this->delimiter, $this->enclosure, $this->escape);
-        }
+        $eol = (self::EOL_CRLF === $this->eol) ? "\r\n" : "\n";
+        /** @psalm-suppress TooManyArguments */
+        $result = fputcsv($this->handle, $data, $this->delimiter, $this->enclosure, $this->escape, $eol);
         if (false === $result) {
             throw new \Exception(\sprintf('Error during the writing in %s file', $this->filename));
         }
