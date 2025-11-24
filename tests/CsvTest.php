@@ -56,7 +56,7 @@ class CsvTest extends TestCase
         $this->assertCsvFile('my-csv.csv', [
             '"a a",bb',
             'cc,dd',
-            '"c""c","d\"d"',
+            '"c""c","d\""d"',
         ]);
     }
 

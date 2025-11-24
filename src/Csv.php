@@ -62,7 +62,7 @@ class Csv
             'delimiter' => ',',
             'enclosure' => '"',
             'eol' => self::EOL_LF,
-            'escape' => '\\',
+            'escape' => '',
             'add_utf8_bom' => false,
         ]);
         $resolver->setAllowedTypes('header', ['null', 'array']);
