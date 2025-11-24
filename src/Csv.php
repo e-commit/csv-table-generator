@@ -44,17 +44,6 @@ class Csv
     protected int $fileNumber = 0;
     protected int $lines = 0;
     protected int $totalLines = 0;
-
-    /**
-     * @deprecated No longer used
-     */
-    protected bool $unixToDos = false;
-
-    /**
-     * @deprecated No longer used
-     */
-    protected string $unixToDosPath;
-
     protected bool $addUtf8Bom = false;
 
     /**
@@ -74,7 +63,6 @@ class Csv
             'enclosure' => '"',
             'eol' => self::EOL_LF,
             'escape' => '\\',
-            'unix2dos_path' => '/usr/bin/unix2dos',
             'add_utf8_bom' => false,
         ]);
         $resolver->setAllowedTypes('header', ['null', 'array']);
@@ -83,9 +71,7 @@ class Csv
         $resolver->setAllowedTypes('enclosure', 'string');
         $resolver->setAllowedValues('eol', [self::EOL_LF, self::EOL_CRLF]);
         $resolver->setAllowedTypes('escape', 'string');
-        $resolver->setAllowedTypes('unix2dos_path', 'string');
         $resolver->setAllowedTypes('add_utf8_bom', 'bool');
-        $resolver->setDeprecated('unix2dos_path', 'ecommit/csv-table-generator', '1.3');
         $this->configureOptions($resolver);
         $options = $resolver->resolve($options);
 
@@ -107,9 +93,6 @@ class Csv
         $this->enclosure = $options['enclosure'];
         $this->eol = $options['eol'];
         $this->escape = $options['escape'];
-
-        /* @psalm-suppress DeprecatedProperty */
-        $this->unixToDosPath = $options['unix2dos_path'];
 
         $this->addUtf8Bom = $options['add_utf8_bom'];
 
