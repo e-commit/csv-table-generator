@@ -15,15 +15,33 @@ namespace Ecommit\CsvTableGenerator;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * @phpstan-type Options array{
+ *     header?: ?array<?string>,
+ *     max_lines?: ?int,
+ *     delimiter?: string,
+ *     enclosure?: string,
+ *     eol?: self::EOL_*,
+ *     escape?: string,
+ *     add_utf8_bom?: bool,
+ * }
+ * @phpstan-type ResolvedOptions array{
+ *     header: ?array<?string>,
+ *     max_lines: ?int,
+ *     delimiter: string,
+ *     enclosure: string,
+ *     eol: self::EOL_*,
+ *     escape: string,
+ *     add_utf8_bom: bool,
+ *  }
+ */
 class Csv
 {
     public const EOL_LF = 'LF';
     public const EOL_CRLF = 'CR+LF';
 
     /**
-     * @var resource|false|null
-     *
-     * @psalm-var resource|closed-resource|false|null
+     * @var resource|closed-resource|false|null
      */
     protected mixed $handle = null;
 
@@ -32,7 +50,7 @@ class Csv
     protected string $currentPathname;
 
     /**
-     * @var array<string, string>|null
+     * @var array<?string>|null
      */
     protected ?array $header;
 
@@ -49,9 +67,9 @@ class Csv
     /**
      * Constructor.
      *
-     * @param string $pathDir  Path folder
-     * @param string $filename Filename (without path folder and extension)
-     * @param array  $options  See README.md
+     * @param string  $pathDir  Path folder
+     * @param string  $filename Filename (without path folder and extension)
+     * @param Options $options  See README.md
      */
     public function __construct(string $pathDir, string $filename, array $options = [])
     {
@@ -73,6 +91,7 @@ class Csv
         $resolver->setAllowedTypes('escape', 'string');
         $resolver->setAllowedTypes('add_utf8_bom', 'bool');
         $this->configureOptions($resolver);
+        /** @var ResolvedOptions $options */
         $options = $resolver->resolve($options);
 
         // Test folder
@@ -153,14 +172,10 @@ class Csv
     /**
      * Add line in CSV file.
      *
-     * @param array $data
+     * @param array<?scalar> $data
      */
-    public function write($data): void
+    public function write(array $data): void
     {
-        if (!\is_resource($this->handle)) {
-            throw new \Exception(\sprintf('Handle does not exist. File %s', $this->filename));
-        }
-
         // New file
         if (null !== $this->maxLines && $this->maxLines == $this->lines) {
             $this->newFile();
@@ -168,7 +183,9 @@ class Csv
 
         // Write
         $eol = (self::EOL_CRLF === $this->eol) ? "\r\n" : "\n";
-        /** @psalm-suppress TooManyArguments */
+        if (!\is_resource($this->handle)) {
+            throw new \Exception(\sprintf('Handle does not exist. File %s', $this->filename));
+        }
         $result = fputcsv($this->handle, $data, $this->delimiter, $this->enclosure, $this->escape, $eol);
         if (false === $result) {
             throw new \Exception(\sprintf('Error during the writing in %s file', $this->filename));

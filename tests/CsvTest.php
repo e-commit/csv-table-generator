@@ -18,7 +18,7 @@ use PHPUnit\Framework\TestCase;
 
 class CsvTest extends TestCase
 {
-    protected $path;
+    protected string $path;
 
     protected function setUp(): void
     {
@@ -39,9 +39,12 @@ class CsvTest extends TestCase
         }
 
         $files = glob($this->path.'/*');
-        foreach ($files as $file) {
-            is_dir($file) ? $this->deleteDir($file) : unlink($file);
+        if ($files) {
+            foreach ($files as $file) {
+                is_dir($file) ? $this->deleteDir() : unlink($file);
+            }
         }
+
         rmdir($this->path);
     }
 
@@ -355,11 +358,17 @@ class CsvTest extends TestCase
         $csv->close();
     }
 
+    /**
+     * @param array<string, mixed> $options
+     */
     protected function createCsv(array $options = []): Csv
     {
         return new Csv($this->path, 'my-csv', $options);
     }
 
+    /**
+     * @param array<?scalar> $expectedRows
+     */
     protected function assertCsvFile(string $filename, array $expectedRows, bool $useCrlf = false, string $beforeContent = ''): void
     {
         $this->assertFileExists($this->path.'/'.$filename, 'File not found');
