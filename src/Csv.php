@@ -25,86 +25,37 @@ class Csv
      *
      * @psalm-var resource|closed-resource|false|null
      */
-    protected $handle;
+    protected mixed $handle = null;
+
+    protected string $pathDir;
+    protected string $filename;
+    protected string $currentPathname;
 
     /**
-     * @var string
+     * @var array<string, string>|null
      */
-    protected $pathDir;
+    protected ?array $header;
+
+    protected ?int $maxLines;
+    protected string $delimiter;
+    protected string $enclosure;
+    protected string $eol;
+    protected string $escape;
+    protected int $fileNumber = 0;
+    protected int $lines = 0;
+    protected int $totalLines = 0;
 
     /**
-     * @var string
-     */
-    protected $filename;
-
-    /**
-     * @var string
-     */
-    protected $currentPathname;
-
-    /**
-     * @var array|null
-     */
-    protected $header;
-
-    /**
-     * @var int|null
-     */
-    protected $maxLines;
-
-    /**
-     * @var string
-     */
-    protected $delimiter;
-
-    /**
-     * @var string
-     */
-    protected $enclosure;
-
-    /**
-     * @var string
-     */
-    protected $eol;
-
-    /**
-     * @var string
-     */
-    protected $escape;
-
-    /**
-     * @var int
-     */
-    protected $fileNumber = 0;
-
-    /**
-     * @var int
-     */
-    protected $lines = 0;
-
-    /**
-     * @var int
-     */
-    protected $totalLines = 0;
-
-    /**
-     * @var bool
-     *
      * @deprecated No longer used
      */
-    protected $unixToDos = false;
+    protected bool $unixToDos = false;
 
     /**
-     * @var string
-     *
      * @deprecated No longer used
      */
-    protected $unixToDosPath;
+    protected string $unixToDosPath;
 
-    /**
-     * @var bool
-     */
-    protected $addUtf8Bom = false;
+    protected bool $addUtf8Bom = false;
 
     /**
      * Constructor.
