@@ -122,9 +122,7 @@ jobs:
 
             -   name: Analyze composer dependencies
                 if: matrix.coding-standards
-                run: |
-                    curl -LSs https://github.com/maglnet/ComposerRequireChecker/releases/latest/download/composer-require-checker.phar > composer-require-checker.phar
-                    php composer-require-checker.phar check composer.json
+                run: php vendor/bin/composer-require-checker check composer.json
 
             -   name: Check license year
                 if: matrix.coding-standards
