@@ -72,6 +72,11 @@ jobs:
                         description: 'with Coding Standards'
                         coding-standards: true
 
+                    # Dependencies
+                    -   php-version: '8.4'
+                        description: 'with Analyze dependencies'
+                        analyze-dependencies: true
+
                     #Static Analysis (min PHP version)
                     -   php-version: '8.1'
                         description: 'with Static Analysis'
@@ -137,15 +142,15 @@ jobs:
                 if: matrix.coding-standards
                 run: php vendor/bin/php-cs-fixer fix --diff --dry-run -v
 
-            -   name: Analyze composer dependencies
-                if: matrix.coding-standards
-                run: |
-                    curl -LSs https://github.com/maglnet/ComposerRequireChecker/releases/latest/download/composer-require-checker.phar > composer-require-checker.phar
-                    php composer-require-checker.phar check composer.json
-
             -   name: Check license year
                 if: matrix.coding-standards
                 run: cat LICENSE |grep -E "\(c\) ([0-9]+\-)*`date +%Y`"
+
+            -   name: Analyze composer dependencies
+                if: matrix.analyze-dependencies
+                run: |
+                    curl -LSs https://github.com/maglnet/ComposerRequireChecker/releases/latest/download/composer-require-checker.phar > composer-require-checker.phar
+                    php composer-require-checker.phar check composer.json
 
             -   name: Run PHPStan
                 if: matrix.static-analysis
