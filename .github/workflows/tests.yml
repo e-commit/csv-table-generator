@@ -135,7 +135,7 @@ jobs:
                 run: composer update --no-interaction --no-progress ${{ matrix.composer-flags }}
 
             -   name: Run PHPUnit
-                if: matrix.coding-standards != true && matrix.static-analysis != true
+                if: matrix.coding-standards != true && matrix.analyze-dependencies != true && matrix.static-analysis != true
                 run: php vendor/bin/phpunit
 
             -   name: Run PHP CS Fixer
